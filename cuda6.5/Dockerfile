@@ -1,6 +1,6 @@
-FROM nvidia/cuda:6.5-devel
+FROM nvidia/cuda:6.5
 
-MAINTAINER Wieland Brendel <wieland.brendel@posteo.de>
+MAINTAINER Bethge Lab <opensource@bethgelab.org>
 
 # Copied from Jupyter/Notebook because packages cannot be removed once the
 # requirements for the Xserver are installed
