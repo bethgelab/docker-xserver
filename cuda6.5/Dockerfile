@@ -37,7 +37,6 @@ RUN apt-get update -qq && DEBIAN_FRONTEND=noninteractive apt-get install -yq --n
         vim \
         wget \
         zlib1g-dev \
-    && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Install X11, SSH, sudo and gfortran
@@ -52,31 +51,29 @@ RUN apt-get update -qq && DEBIAN_FRONTEND=noninteractive apt-get install -yq --n
         xpra \
         xserver-xephyr \
         xterm \
-        xvfb
+        xvfb \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Build latest stable release from OpenBLAS from source
-ADD openblas.conf /etc/ld.so.conf.d/openblas.conf
-RUN mkdir /tmp/build
-
-RUN cd /tmp/build \
-    && git clone -q --branch=master https://github.com/xianyi/OpenBLAS.git
-
-RUN cd /tmp/build/OpenBLAS \
-    && make DYNAMIC_ARCH=1 NO_AFFINITY=1 NUM_THREADS=32 \
-    && make install DYNAMIC_ARCH=1 NO_AFFINITY=1 NUM_THREADS=32
-
-RUN rm -rf /tmp/build
-
+#
 # Rebuild ld cache, this assumes that:
 # /etc/ld.so.conf.d/openblas.conf was installed by Dockerfile
 # and that the libraries are in /opt/OpenBLAS/lib
-RUN ldconfig
+ADD openblas.conf /etc/ld.so.conf.d/openblas.conf
+RUN mkdir /tmp/build \
+    && cd /tmp/build \
+    && git clone -q --branch=master https://github.com/xianyi/OpenBLAS.git \
+    && cd /tmp/build/OpenBLAS \
+    && make DYNAMIC_ARCH=1 NO_AFFINITY=1 NUM_THREADS=32 \
+    && make install DYNAMIC_ARCH=1 NO_AFFINITY=1 NUM_THREADS=32 \
+    && rm -rf /tmp/build \
+    && ldconfig
 
 # Configuring xdm to allow connections from any IP address and ssh to allow X11 Forwarding. 
-RUN sed -i 's/DisplayManager.requestPort/!DisplayManager.requestPort/g' /etc/X11/xdm/xdm-config
-RUN sed -i '/#any host/c\*' /etc/X11/xdm/Xaccess
-RUN ln -s /usr/bin/Xorg /usr/bin/X
-RUN echo X11Forwarding yes >> /etc/ssh/ssh_config
+RUN sed -i 's/DisplayManager.requestPort/!DisplayManager.requestPort/g' /etc/X11/xdm/xdm-config \
+    && sed -i '/#any host/c\*' /etc/X11/xdm/Xaccess \
+    && ln -s /usr/bin/Xorg /usr/bin/X \
+    && echo X11Forwarding yes >> /etc/ssh/ssh_config
 
 # Fix PAM login issue with sshd
 RUN sed -i 's/session    required     pam_loginuid.so/#session    required     pam_loginuid.so/g' /etc/pam.d/sshd
