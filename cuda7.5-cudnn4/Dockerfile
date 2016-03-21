@@ -6,13 +6,14 @@ MAINTAINER Bethge Lab <opensource@bethgelab.org>
 # requirements for the Xserver are installed
 #
 # Remove preinstalled copy of python that blocks our ability to install development python.
-RUN DEBIAN_FRONTEND=noninteractive apt-get remove -yq \
+RUN apt-get update -qq && DEBIAN_FRONTEND=noninteractive apt-get remove -yq \
         python3-minimal \
         python3.5 \
         python3.5-minimal \
         libpython3-stdlib \
         libpython3.5-minimal \
-        libpython3.5-stdlib
+        libpython3.5-stdlib \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Python binary and source dependencies
 RUN apt-get update -qq && DEBIAN_FRONTEND=noninteractive apt-get install -yq --no-install-recommends \
