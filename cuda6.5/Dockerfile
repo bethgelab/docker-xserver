@@ -36,6 +36,8 @@ RUN apt-get update -qq && DEBIAN_FRONTEND=noninteractive apt-get install -yq --n
         texlive-latex-base \
         texlive-latex-extra \
         vim \
+        screen \
+        tmux \
         wget \
         zlib1g-dev \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
