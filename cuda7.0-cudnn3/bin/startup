@@ -1,7 +1,0 @@
-#!/bin/bash
-
-# Start SSH daemon
-/usr/sbin/sshd
-
-# Start window server
-docker-desktop -s 1440x900 -d 10 > /dev/null 2>&1 &
