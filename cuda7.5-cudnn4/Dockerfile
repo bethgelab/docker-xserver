@@ -4,19 +4,28 @@ MAINTAINER Bethge Lab <opensource@bethgelab.org>
 
 # Copied from Jupyter/Notebook because packages cannot be removed once the
 # requirements for the Xserver are installed
-#
+# (small modification in the last line)
+# ---- BEGIN ----
+
+# Not essential, but wise to set the lang
+# Note: Users with other languages should set this in their derivative image
+ENV LANGUAGE en_US.UTF-8
+ENV LANG en_US.UTF-8
+ENV LC_ALL en_US.UTF-8
+ENV PYTHONIOENCODING UTF-8
+
 # Remove preinstalled copy of python that blocks our ability to install development python.
-RUN apt-get update -qq && DEBIAN_FRONTEND=noninteractive apt-get remove -yq \
+RUN DEBIAN_FRONTEND=noninteractive apt-get remove -yq \
         python3-minimal \
         python3.4 \
         python3.4-minimal \
         libpython3-stdlib \
-        libpython3.4-minimal \
         libpython3.4-stdlib \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+        libpython3.4-minimal
 
 # Python binary and source dependencies
-RUN apt-get update -qq && DEBIAN_FRONTEND=noninteractive apt-get install -yq --no-install-recommends \
+RUN apt-get update -qq && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -yq --no-install-recommends \
         build-essential \
         ca-certificates \
         curl \
@@ -35,21 +44,27 @@ RUN apt-get update -qq && DEBIAN_FRONTEND=noninteractive apt-get install -yq --n
         texlive-fonts-recommended \
         texlive-latex-base \
         texlive-latex-extra \
-        vim \
-        screen \
-        tmux \
-        wget \
-        zlib1g-dev \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+        zlib1g-dev && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# Install X11, SSH, sudo and gfortran
+# ---- END ----
+
+# use https:// instead of git:// to access github (e.g. for jupyter install)
+RUN git config --global url.https://github.com/.insteadOf git://github.com/
+
+# Install X11, SSH, sudo and gfortran, etc.
 RUN apt-get update -qq && DEBIAN_FRONTEND=noninteractive apt-get install -yq --no-install-recommends \
         fluxbox \
         gfortran \
         openssh-server \
         pwgen \
         rox-filer \
+        screen \
         sudo \
+        tmux \
+        vim \
+        wget \
         xdm \
         xpra \
         xserver-xephyr \
