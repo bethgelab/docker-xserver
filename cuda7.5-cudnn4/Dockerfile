@@ -7,12 +7,14 @@ MAINTAINER Bethge Lab <opensource@bethgelab.org>
 # (small modification in the last line)
 # ---- BEGIN ----
 
+# ---- MODIFICATION BEGIN ----
 # Not essential, but wise to set the lang
 # Note: Users with other languages should set this in their derivative image
-ENV LANGUAGE en_US.UTF-8
-ENV LANG en_US.UTF-8
-ENV LC_ALL en_US.UTF-8
-ENV PYTHONIOENCODING UTF-8
+#ENV LANGUAGE en_US.UTF-8
+#ENV LANG en_US.UTF-8
+#ENV LC_ALL en_US.UTF-8
+#ENV PYTHONIOENCODING UTF-8
+# ---- MODIFICATION END ----
 
 # Remove preinstalled copy of python that blocks our ability to install development python.
 RUN DEBIAN_FRONTEND=noninteractive apt-get remove -yq \
