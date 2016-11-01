@@ -2,6 +2,11 @@ FROM nvidia/cuda:7.5-cudnn5-devel
 
 MAINTAINER Bethge Lab <opensource@bethgelab.org>
 
+# set the time zone correctly
+ENV TZ=Europe/Berlin
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+
 # Copied from Jupyter/Notebook because packages cannot be removed once the
 # requirements for the Xserver are installed
 # (small modification in the last line)
