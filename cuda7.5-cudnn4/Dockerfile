@@ -97,8 +97,7 @@ RUN mkdir /tmp/build \
 # Configuring xdm to allow connections from any IP address and ssh to allow X11 Forwarding. 
 RUN sed -i 's/DisplayManager.requestPort/!DisplayManager.requestPort/g' /etc/X11/xdm/xdm-config \
     && sed -i '/#any host/c\*' /etc/X11/xdm/Xaccess \
-    && ln -s /usr/bin/Xorg /usr/bin/X \
-    && echo X11Forwarding yes >> /etc/ssh/ssh_config
+    && ln -s /usr/bin/Xorg /usr/bin/X
 
 # Fix PAM login issue with sshd
 RUN sed -i 's/session    required     pam_loginuid.so/#session    required     pam_loginuid.so/g' /etc/pam.d/sshd
